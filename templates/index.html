@@ -11,22 +11,29 @@
     <h1>CollegeMajor</h1>
     <h2>Search by Major Name</h2>
     <form method="get">
-        <input type="text" placeholder="Major Name" id="major" name="major">
+        <input type="text" placeholder="Major Name" name="major">
+        <input type="submit" value="Search">
+    </form>
+    <form method="get">
+        <input type="text" placeholder="School Name" name="school">
         <input type="submit" value="Search">
     </form>
 
     <hr>
-
+    {% block content %}
     <table>
         <tr>
-            <th>University</th>
+            {% if majors|length > 0 %}
+            <th>Majors</th>
+            {% elif schools|length > 0 %}
+            <th>Universities</th>
+            {% endif %}
             <th>First Year Salary</th>
         </tr>
 
         <h2>Highest Bachelor's Degree Major Salaries By School</h2>
-
-        {% block content %}
-            {% for school_name, median_earnings_kv in universities.items %}
+            {% if schools|length > 0 %}
+            {% for school_name, median_earnings_kv in schools.items %}
                 <tr>
                     <td>{{ school_name }}</td>
 
@@ -35,9 +42,21 @@
                     {% endfor %}
                 </tr>
             {% endfor %}
-        {% endblock %}
+            {% elif majors|length > 0 %}
+            {% for major_name, median_earnings_kv in majors.items %}
+                <tr>
+                    <td>{{ major_name }}</td>
+
+                    {% for _, median_earning in median_earnings_kv.items %}
+                        <td>{{ median_earning }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            {% endif %}
+
 
     </table>
+ {% endblock %}
 
 </body>
 </html>
