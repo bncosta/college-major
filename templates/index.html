@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CollegeMajor: Main Page</title>
+</head>
+<body>
+    <h1>CollegeMajor</h1>
+    <h2>Search by Major Name</h2>
+    <form method="get">
+        <input type="text" placeholder="Major Name" id="major" name="major">
+        <input type="submit" value="Search">
+    </form>
+
+    <hr>
+
+    <table>
+        <tr>
+            <th>University</th>
+            <th>First Year Salary</th>
+        </tr>
+
+        <h2>Highest Bachelor's Degree Major Salaries By School</h2>
+
+        {% block content %}
+            {% for school_name, median_earnings_kv in universities.items %}
+                <tr>
+                    <td>{{ school_name }}</td>
+
+                    {% for _, median_earning in median_earnings_kv.items %}
+                        <td>{{ median_earning }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        {% endblock %}
+
+    </table>
+
+</body>
+</html>
