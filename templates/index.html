@@ -9,46 +9,53 @@
 </head>
 <body>
     <h1>CollegeMajor</h1>
-    <h2>Search by Major Name</h2>
+    <h2>Search by Major</h2>
     <form method="get">
         <input type="text" placeholder="Major Name" name="major">
         <input type="submit" value="Search">
     </form>
+    <h2>Search by University</h2>
     <form method="get">
         <input type="text" placeholder="School Name" name="school">
         <input type="submit" value="Search">
     </form>
+
+    <br>
+    <a href="?highest_avg=True">View Majors By Average Salary</a>
 
     <hr>
     {% block content %}
     <table>
         <tr>
             {% if majors|length > 0 %}
-            <th>Majors</th>
+                <th>Majors</th>
             {% elif schools|length > 0 %}
-            <th>Universities</th>
+                <th>Universities</th>
             {% endif %}
-            <th>First Year Salary</th>
+            {% if majors|length > 0 or schools|length > 0 %}
+                <h2>Highest Bachelor's Degree Major Salaries By School</h2>
+                <th>First Year Salary</th>
+            {% endif %}
         </tr>
 
-        <h2>Highest Bachelor's Degree Major Salaries By School</h2>
             {% if schools|length > 0 %}
+                <h3>Average salary for major: ${{ average_salary }}.</h3>
             {% for school_name, median_earnings_kv in schools.items %}
                 <tr>
-                    <td>{{ school_name }}</td>
+                    <td>{{ school_name|title }}</td>
 
                     {% for _, median_earning in median_earnings_kv.items %}
-                        <td>{{ median_earning }}</td>
+                        <td>${{ median_earning }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
             {% elif majors|length > 0 %}
             {% for major_name, median_earnings_kv in majors.items %}
                 <tr>
-                    <td>{{ major_name }}</td>
+                    <td>{{ major_name|title }}</td>
 
                     {% for _, median_earning in median_earnings_kv.items %}
-                        <td>{{ median_earning }}</td>
+                        <td>${{ median_earning }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
