@@ -7,6 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CollegeMajor: Main Page</title>
 </head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<link src="/static/collected/autocomplete_light/vendor/select2/dist/css/select2.css" type="text/css" media="all" rel="stylesheet" />
+<link src="/static/collected/autocomplete_light/select2.css" type="text/css" media="all" rel="stylesheet" />
 <body>
     <h1>CollegeMajor</h1>
     <h2>Search by Major</h2>
@@ -65,5 +68,66 @@
     </table>
  {% endblock %}
 
+    <!-- Test for Major Autocomplete From-->
+{% block test %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ MajorForm.as_p }}
+
+        <table style="display: none">
+            {{ view.formset.empty_form }}
+        </table>
+
+        <table>
+            {{ view.formset }}
+        </table>
+
+        <span id="add-form" class="button">Add form</span>
+
+        <input type="submit" />
+    </form>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ SchoolFrom.as_p }}
+
+        <table style="display: none">
+            {{ view.formset.empty_form }}
+        </table>
+
+        <table>
+            {{ view.formset }}
+        </table>
+
+        <span id="add-form" class="button">Add form</span>
+
+        <input type="submit" />
+    </form>
+{% endblock %}
+    <!-- End Test-->
+{% block footer %}
+<script type="text/javascript" src="http://dal-yourlabs.rhcloud.com/static/collected/admin/js/vendor/jquery/jquery.js"></script>
+{{ MajorForm.media }}
+{{ SchoolFrom.media }}
+<script>
+(function($) {
+    $('#add-form').click(function() {
+        var index = $('#id_inline_test_models-TOTAL_FORMS').val()
+        var newTable = $('#id_inline_test_models-__prefix__-DELETE').parents('table').clone()
+        newTable.find(':input').each(function() {
+            for (attr of ['name', 'id'])
+                $(this).attr(
+                    attr,
+                    $(this).attr(attr).replace('__prefix__', index)
+                )
+        })
+        newTable.insertBefore($(this))
+        $('#id_inline_test_models-TOTAL_FORMS').val(
+            parseInt($('#id_inline_test_models-TOTAL_FORMS').val()) + 1
+        )
+        newTable.slideDown()
+    })
+})($)
+</script>
+{% endblock %}
 </body>
 </html>

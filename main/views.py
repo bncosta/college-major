@@ -5,30 +5,93 @@ from django.shortcuts import render
 from main.models import Collegemajor
 from collections import defaultdict
 from django.db import connection
+from django.views.generic import TemplateView
+from main.forms import MajorForm, SchoolForm
+from dal import autocomplete
 
+"""
+- Used for Index.html page
+- Allows users to search majors by price & universities
+"""
+class collegeMajor(TemplateView):
+    mForm = MajorForm
+    sForm = SchoolForm
+    # called for index.html
+    def get(self, request):
+        # dictionary of key:value pairs sent to front end
+        context = {}
 
-# called for index.html
-def index(request):
-    # dictionary of key:value pairs sent to front end
-    context = {}
+        # NOT IMPLEMENTED PROPERLY! Forms to assist in autocomplete
+        context['MajorForm'] = self.mForm()
+        context['SchoolFrom'] = self.sForm()
 
-    # display schools that pay the highest for a given major to front-end
-    if "major" in request.GET.keys():
-        major = request.GET['major'].lower()
-        context['schools'], context['average_salary'] = highest_major(major)
+        # display schools that pay the highest for a given major to front-end
+        if "major" in request.GET.keys():
+            major = request.GET['major'].lower()
+            context['schools'], context['average_salary'] = highest_major(major)
 
-    # display top paying majors for a given university to front-end
-    if "school" in request.GET.keys():
-        school = request.GET['school'].lower()
-        context['majors'] = highest_school(school)
+        # display top paying majors for a given university to front-end
+        if "school" in request.GET.keys():
+            school = request.GET['school'].lower()
+            context['majors'] = highest_school(school)
 
-    if "highest_avg" in request.GET.keys():
-        context['majors'] = highest_avg_major()
+        if "highest_avg" in request.GET.keys():
+            context['majors'] = highest_avg_major()
 
-    # returns output
-    return render(request, "index.html", context)
+        # returns output
+        return render(request, "index.html", context)
 
+    #TESTING PHASE interprets form data
+    def post(self, request):
+        majors = self.mForm(request.POST)
+        if majors.is_valid():
+            print('yay, it works!')
+        else:
+            print('Rats!')
 
+"""
+(NEEDS TO BE IMPLEMENTED MORE SECURELY) used to display autocomplete results for majors
+"""
+class majorAutoComplete(autocomplete.Select2QuerySetView):
+    # code that enables autocomplete search for majors
+    def get_queryset(self):
+        # gets dataset of majors
+        majors = Collegemajor.objects.values_list('cipdesc')
+
+        #filters user search by major
+        if self.q:
+            majors = majors.filter(cipdesc__istartswith = self.q)
+
+        return majors
+
+    # Because we are only unpacking a list of majors, we simply return the string of the tuple instead of pk obj
+    # (pk objects help organize serialized data)
+    def get_result_value(self, result):
+        return result
+
+"""
+(NEEDS TO BE IMPLEMENTED MORE SECURELY) used to display autocomplete results for schools
+"""
+class schoolAutoComplete(autocomplete.Select2QuerySetView):
+    # code that enables autocomplete search for schools
+    def get_queryset(self):
+        # gets dataset of school
+        schools = Collegemajor.objects.values_list('instnm')
+
+        #filters user search by school
+        if self.q:
+            schools = schools.filter(instnm__istartswith = self.q)
+
+        return schools
+
+    # Because we are only unpacking a litst of schools, we simply return the string of the tuple instead of pk obj
+    # (pk objects help organize serialized data)
+    def get_result_value(self, result):
+        return result
+
+"""
+Helper Methods - (Could possibly be reimplemented in class?)
+"""
 # returns dictionary of universities that pay the highest for a given major
 def highest_major(major):
     # universities that receive highest pay from major
@@ -80,6 +143,7 @@ def highest_avg_major():
         # if major is valid, then pulls top 10 highest paying schools
         query1 = f"SELECT AVG(NULLIF(md_earn_wne, '')::int) as average, cipdesc  FROM collegemajor " \
                  f"WHERE credlev = '3' group by cipdesc order by average desc;"
+        print(query1)
 
         cursor.execute(query1)
         for avg_salary, major_name in cursor.fetchall():
