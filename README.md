@@ -1,3 +1,3 @@
 # CollegeMajor
 Django web application. Shows university by major's first year salary.  
-- By Brian Costa
+- By Aaron Shah and Brian Costa
