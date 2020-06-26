@@ -6,6 +6,7 @@ from main.models import Collegemajor
 from collections import defaultdict
 from django.db import connection
 from django.views.generic import TemplateView
+from django.views.generic import FormView
 from main.forms import MajorForm, SchoolForm
 from dal import autocomplete
 
@@ -16,14 +17,19 @@ from dal import autocomplete
 class collegeMajor(TemplateView):
     mForm = MajorForm
     sForm = SchoolForm
-    # called for index.html
-    def get(self, request):
-        # dictionary of key:value pairs sent to front end
-        context = {}
 
+    # gets context data that will always be rendered
+    def get_context_data(self, request, **context):
         # NOT IMPLEMENTED PROPERLY! Forms to assist in autocomplete
         context['MajorForm'] = self.mForm()
         context['SchoolFrom'] = self.sForm()
+        return super(collegeMajor, self).get_context_data(**context)
+
+    # called for index.html
+    def get (self, request):
+        # dictionary of key:value pairs sent to front end
+        context = {}
+        context = self.get_context_data(request)
 
         # display schools that pay the highest for a given major to front-end
         if "major" in request.GET.keys():
@@ -41,13 +47,15 @@ class collegeMajor(TemplateView):
         # returns output
         return render(request, "index.html", context)
 
-    #TESTING PHASE interprets form data
+    # TESTING PHASE interprets form data
     def post(self, request):
         majors = self.mForm(request.POST)
         if majors.is_valid():
             print('yay, it works!')
         else:
             print('Rats!')
+            print(majors.cleaned_data['cipdesc'])
+        return render(request, "index.html")
 
 """
 (NEEDS TO BE IMPLEMENTED MORE SECURELY) used to display autocomplete results for majors
@@ -56,7 +64,7 @@ class majorAutoComplete(autocomplete.Select2QuerySetView):
     # code that enables autocomplete search for majors
     def get_queryset(self):
         # gets dataset of majors
-        majors = Collegemajor.objects.values_list('cipdesc')
+        majors = Collegemajor.objects.values_list('cipdesc').distinct()
 
         #filters user search by major
         if self.q:
@@ -67,6 +75,12 @@ class majorAutoComplete(autocomplete.Select2QuerySetView):
     # Because we are only unpacking a list of majors, we simply return the string of the tuple instead of pk obj
     # (pk objects help organize serialized data)
     def get_result_value(self, result):
+        result = result[0].title()
+        return result
+
+    # formats text correctly on front-end
+    def get_result_label(self, result):
+        result = result[0].title()
         return result
 
 """
@@ -76,7 +90,7 @@ class schoolAutoComplete(autocomplete.Select2QuerySetView):
     # code that enables autocomplete search for schools
     def get_queryset(self):
         # gets dataset of school
-        schools = Collegemajor.objects.values_list('instnm')
+        schools = Collegemajor.objects.values_list('instnm').distinct()
 
         #filters user search by school
         if self.q:
