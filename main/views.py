@@ -22,11 +22,11 @@ class collegeMajor(TemplateView):
     def get_context_data(self, request, **context):
         # NOT IMPLEMENTED PROPERLY! Forms to assist in autocomplete
         context['MajorForm'] = self.mForm()
-        context['SchoolFrom'] = self.sForm()
+        context['SchoolForm'] = self.sForm()
         return super(collegeMajor, self).get_context_data(**context)
 
     # called for index.html
-    def get (self, request):
+    def get(self, request):
         # dictionary of key:value pairs sent to front end
         context = {}
         context = self.get_context_data(request)
@@ -57,19 +57,18 @@ class collegeMajor(TemplateView):
             print(majors.cleaned_data['cipdesc'])
         return render(request, "index.html")
 
-"""
-(NEEDS TO BE IMPLEMENTED MORE SECURELY) used to display autocomplete results for majors
-"""
-class majorAutoComplete(autocomplete.Select2QuerySetView):
+
+class MajorAutoComplete(autocomplete.Select2QuerySetView):
     # code that enables autocomplete search for majors
     def get_queryset(self):
         # gets dataset of majors
-        majors = Collegemajor.objects.values_list('cipdesc').distinct()
+        majors = Collegemajor.objects.filter(credlev='3').values_list('cipdesc').distinct()
 
-        #filters user search by major
+        # filters user search by major
         if self.q:
-            majors = majors.filter(cipdesc__istartswith = self.q)
+            majors = majors.filter(cipdesc__icontains=self.q)
 
+        print(type(majors))
         return majors
 
     # Because we are only unpacking a list of majors, we simply return the string of the tuple instead of pk obj
@@ -83,18 +82,16 @@ class majorAutoComplete(autocomplete.Select2QuerySetView):
         result = result[0].title()
         return result
 
-"""
-(NEEDS TO BE IMPLEMENTED MORE SECURELY) used to display autocomplete results for schools
-"""
-class schoolAutoComplete(autocomplete.Select2QuerySetView):
+
+class SchoolAutoComplete(autocomplete.Select2QuerySetView):
     # code that enables autocomplete search for schools
     def get_queryset(self):
         # gets dataset of school
-        schools = Collegemajor.objects.values_list('instnm').distinct()
+        schools = Collegemajor.objects.filter(credlev='3').values_list('instnm').distinct()
 
-        #filters user search by school
+        # filters user search by school
         if self.q:
-            schools = schools.filter(instnm__istartswith = self.q)
+            schools = schools.filter(instnm__icontains=self.q)
 
         return schools
 
@@ -102,6 +99,12 @@ class schoolAutoComplete(autocomplete.Select2QuerySetView):
     # (pk objects help organize serialized data)
     def get_result_value(self, result):
         return result
+
+    # formats text correctly on front-end
+    def get_result_label(self, result):
+        result = result[0].title()
+        return result
+
 
 """
 Helper Methods - (Could possibly be reimplemented in class?)
@@ -113,6 +116,8 @@ def highest_major(major):
 
     # if major is valid, then pulls top 10 highest paying schools
     if major is not None:
+        major = major.replace("'", "''")
+        major = major.replace('"', '""')
         query1 = f"SELECT * FROM collegemajor WHERE cipdesc = '{major}' " \
                  f"and credlev = '3' order by md_earn_wne::int desc;"
 
@@ -139,6 +144,8 @@ def highest_school(school):
 
     # if major is valid, then pulls top 10 highest paying schools
     if school is not None:
+        school = school.replace("'", "''")
+        school = school.replace('"', '""')
         query1 = f"SELECT * FROM collegemajor WHERE instnm = '{school}' " \
                  f"and credlev = '3' order by md_earn_wne::int desc;"
         for m in Collegemajor.objects.raw(query1):
@@ -147,6 +154,7 @@ def highest_school(school):
 
     # returns dictionary
         return dict(highest_majors)
+
 
 # returns dictionary of majors by average starting salary
 def highest_avg_major():
@@ -157,7 +165,6 @@ def highest_avg_major():
         # if major is valid, then pulls top 10 highest paying schools
         query1 = f"SELECT AVG(NULLIF(md_earn_wne, '')::int) as average, cipdesc  FROM collegemajor " \
                  f"WHERE credlev = '3' group by cipdesc order by average desc;"
-        print(query1)
 
         cursor.execute(query1)
         for avg_salary, major_name in cursor.fetchall():

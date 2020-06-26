@@ -1,7 +1,7 @@
 from django.urls import path
 from django.views.generic import TemplateView
 from django.conf.urls import url
-from main.views import collegeMajor, majorAutoComplete, schoolAutoComplete
+from main.views import collegeMajor, MajorAutoComplete, SchoolAutoComplete
 
 
 from . import views
@@ -13,12 +13,12 @@ urlpatterns = [
     path('', collegeMajor.as_view(), name='index'),
     url(
         r'^major-autocomplete/$',
-        majorAutoComplete.as_view(),
+        MajorAutoComplete.as_view(),
         name='major-autocomplete',
     ),
     url(
         r'^school-autocomplete/$',
-        schoolAutoComplete.as_view(),
+        SchoolAutoComplete.as_view(),
         name='school-autocomplete',
     ),
 ]

@@ -12,16 +12,23 @@
 <link src="/static/collected/autocomplete_light/select2.css" type="text/css" media="all" rel="stylesheet" />
 <body>
     <h1>CollegeMajor</h1>
-    <h2>Search by Major</h2>
-    <form method="get">
-        <input type="text" placeholder="Major Name" name="major">
-        <input type="submit" value="Search">
-    </form>
-    <h2>Search by University</h2>
-    <form method="get">
-        <input type="text" placeholder="School Name" name="school">
-        <input type="submit" value="Search">
-    </form>
+
+
+    <!-- Autocomplete Search -->
+    {% block test %}
+        <h2>Search by Major</h2>
+        <form action="" method="get">
+            {{ MajorForm.as_p }}
+
+            <input type="submit" value="Search"/>
+        </form>
+        <h2>Search by University</h2>
+        <form action="" method="get">
+            {{ SchoolForm.as_p }}
+
+            <input type="submit" value="Search">
+        </form>
+    {% endblock %}
 
     <br>
     <a href="?highest_avg=True">View Majors By Average Salary</a>
@@ -63,51 +70,14 @@
                 </tr>
             {% endfor %}
             {% endif %}
-
-
     </table>
  {% endblock %}
 
-    <!-- Test for Major Autocomplete From-->
-{% block test %}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ MajorForm.as_p }}
-
-        <table style="display: none">
-            {{ view.formset.empty_form }}
-        </table>
-
-        <table>
-            {{ view.formset }}
-        </table>
-
-        <span id="add-form" class="button">Add form</span>
-
-        <input type="submit" />
-    </form>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ SchoolFrom.as_p }}
-
-        <table style="display: none">
-            {{ view.formset.empty_form }}
-        </table>
-
-        <table>
-            {{ view.formset }}
-        </table>
-
-        <span id="add-form" class="button">Add form</span>
-
-        <input type="submit" />
-    </form>
-{% endblock %}
     <!-- End Test-->
 {% block footer %}
 <script type="text/javascript" src="http://dal-yourlabs.rhcloud.com/static/collected/admin/js/vendor/jquery/jquery.js"></script>
 {{ MajorForm.media }}
-{{ SchoolFrom.media }}
+{{ SchoolForm.media }}
 <script>
 (function($) {
     $('#add-form').click(function() {
