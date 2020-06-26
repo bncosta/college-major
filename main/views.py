@@ -14,7 +14,9 @@ from dal import autocomplete
 - Used for Index.html page
 - Allows users to search majors by price & universities
 """
-class collegeMajor(TemplateView):
+
+
+class CollegeMajor(TemplateView):
     mForm = MajorForm
     sForm = SchoolForm
 
@@ -23,12 +25,11 @@ class collegeMajor(TemplateView):
         # NOT IMPLEMENTED PROPERLY! Forms to assist in autocomplete
         context['MajorForm'] = self.mForm()
         context['SchoolForm'] = self.sForm()
-        return super(collegeMajor, self).get_context_data(**context)
+        return super(CollegeMajor, self).get_context_data(**context)
 
     # called for index.html
     def get(self, request):
         # dictionary of key:value pairs sent to front end
-        context = {}
         context = self.get_context_data(request)
 
         # display schools that pay the highest for a given major to front-end
@@ -109,6 +110,8 @@ class SchoolAutoComplete(autocomplete.Select2QuerySetView):
 """
 Helper Methods - (Could possibly be reimplemented in class?)
 """
+
+
 # returns dictionary of universities that pay the highest for a given major
 def highest_major(major):
     # universities that receive highest pay from major
@@ -149,10 +152,9 @@ def highest_school(school):
         query1 = f"SELECT * FROM collegemajor WHERE instnm = '{school}' " \
                  f"and credlev = '3' order by md_earn_wne::int desc;"
         for m in Collegemajor.objects.raw(query1):
-
             highest_majors[m.cipdesc]["median_earnings"] = m.md_earn_wne
 
-    # returns dictionary
+        # returns dictionary
         return dict(highest_majors)
 
 
@@ -171,6 +173,5 @@ def highest_avg_major():
             avg_salary = round(avg_salary, -2)
             highest_majors[major_name]["median_earnings"] = avg_salary
 
-    # returns dictionary
+        # returns dictionary
         return dict(highest_majors)
-
