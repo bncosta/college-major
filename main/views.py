@@ -44,7 +44,7 @@ class CollegeMajor(TemplateView):
         # display top paying majors for a given university to front-end
         if "school" in request.GET.keys():
             school = request.GET['school'].lower()
-            context['majors'] = highest_school(school)
+            context['majors'], context["major_names"], context["coordinate_points"] = highest_school(school)
 
         if "highest_avg" in request.GET.keys():
             context['majors'] = highest_avg_major()
@@ -172,11 +172,17 @@ def highest_school(school):
         school = school.replace('"', '""')
         query1 = f"SELECT * FROM collegemajor WHERE instnm = '{school}' " \
                  f"and credlev = '3' order by md_earn_wne::int desc;"
+        major_names = [] # names of majors that the university teaches
+        coordinate_points = [] # data points that will be passed to front-end
+
         for m in Collegemajor.objects.raw(query1):
             highest_majors[m.cipdesc]["median_earnings"] = m.md_earn_wne
+            coords = {'x': m.md_earn_wne, 'y': m.debtmedian}
+            major_names.append(m.cipdesc.title())
+            coordinate_points.append(coords)
 
         # returns dictionary
-        return dict(highest_majors)
+        return dict(highest_majors), major_names, coordinate_points
 
 
 # returns dictionary of majors by average starting salary

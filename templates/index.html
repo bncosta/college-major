@@ -53,8 +53,12 @@
 
         </canvas>
     </div>
+    <!-- School Graph-->
+    <div class="container">
+        <canvas id="SchoolChart">
 
-
+        </canvas>
+    </div>
     <table id="data">
         <thead>
         <tr>
@@ -133,6 +137,58 @@
                         data: {{ coordinate_points_priv_fp|safe}},
                         labels: {{ uni_names_priv_fp|safe}}
                     }]
+            },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem, data) {
+                            var dataset = data.datasets[tooltipItem.datasetIndex];
+                            var index = tooltipItem.index;
+                            var label = dataset.labels[index];
+                            return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
+                        }
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        type: 'linear',
+                        position: 'bottom',
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Median Salary",
+                            fontColor: "red"
+                        }
+                    }],
+                    yAxes: [{
+                        type: 'linear',
+                        position: 'bottom',
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Median Debt",
+                            fontColor: "red"
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+    <!-- Js that renders graph for Schools-->
+    <script>
+        let myChart = document.getElementById('SchoolChart').getContext('2d');
+
+        // Global Options
+        Chart.defaults.global.defaultFontFamily = 'Lato';
+        Chart.defaults.global.defaultFontSize = 18;
+        Chart.defaults.global.defaultFontColor = '#777';
+        let massPopChart = new Chart(myChart, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'School',
+                    backgroundColor: "blue",
+                    data: {{ coordinate_points|safe}},
+                    labels: {{ major_names|safe }}
+                }]
             },
             options: {
                 tooltips: {
