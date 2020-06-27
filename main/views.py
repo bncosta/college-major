@@ -135,7 +135,6 @@ def highest_major(major):
         for m in Collegemajor.objects.raw(query1):
             highest_universities[m.instnm]["median_earnings"] = m.md_earn_wne
             coords = {'x':m.md_earn_wne,'y':m.debtmedian}
-            print(coords)
             if coords['y'] != 'PrivacySuppressed':
                 if m.control == "Private, nonprofit":
                     coordinate_points["Private, nonprofit"].append(coords)
@@ -147,11 +146,6 @@ def highest_major(major):
                     coordinate_points["Private, for-profit"].append(coords)
                     uni_names["Private, for-profit"].append(m.instnm.title())
         avg_salary = None
-
-        #test code
-        print(uni_names["Public"])
-        print(uni_names["Private, nonprofit"])
-        print(uni_names["Private, for-profit"])
 
         # make sure results were returned for this major
         if len(highest_universities) != 0:
