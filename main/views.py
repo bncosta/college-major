@@ -39,6 +39,7 @@ class CollegeMajor(TemplateView):
             context['schools'], context['average_salary'], \
             context['uni_names_pub'], context['uni_names_priv_np'], context['uni_names_priv_fp'],\
             context['coordinate_points_pub'], context['coordinate_points_priv_np'], context['coordinate_points_priv_fp'] = highest_major(major)
+            context['major'] = major.title()
 
         # display top paying majors for a given university to front-end
         if "school" in request.GET.keys():
