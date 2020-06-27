@@ -9,6 +9,7 @@ from django.views.generic import TemplateView
 from django.views.generic import FormView
 from main.forms import MajorForm, SchoolForm
 from dal import autocomplete
+import json
 
 """
 - Used for Index.html page
@@ -35,7 +36,9 @@ class CollegeMajor(TemplateView):
         # display schools that pay the highest for a given major to front-end
         if "major" in request.GET.keys():
             major = request.GET['major'].lower()
-            context['schools'], context['average_salary'] = highest_major(major)
+            context['schools'], context['average_salary'], \
+            context['uni_names_pub'], context['uni_names_priv_np'], context['uni_names_priv_fp'],\
+            context['coordinate_points_pub'], context['coordinate_points_priv_np'], context['coordinate_points_priv_fp'] = highest_major(major)
 
         # display top paying majors for a given university to front-end
         if "school" in request.GET.keys():
@@ -123,11 +126,32 @@ def highest_major(major):
         major = major.replace('"', '""')
         query1 = f"SELECT * FROM collegemajor WHERE cipdesc = '{major}' " \
                  f"and credlev = '3' order by md_earn_wne::int desc;"
-
+        uni_names ={"Private, nonprofit":[],
+                     "Public":[],
+                     "Private, for-profit":[]} # names of universities, catagorized by private / public
+        coordinate_points = {"Private, nonprofit":[],
+                     "Public":[],
+                     "Private, for-profit":[]} #list of data points that will be passed to front end
         for m in Collegemajor.objects.raw(query1):
             highest_universities[m.instnm]["median_earnings"] = m.md_earn_wne
-
+            coords = {'x':m.md_earn_wne,'y':m.debtmedian}
+            print(coords)
+            if coords['y'] != 'PrivacySuppressed':
+                if m.control == "Private, nonprofit":
+                    coordinate_points["Private, nonprofit"].append(coords)
+                    uni_names["Private, nonprofit"].append(m.instnm.title())
+                elif m.control == "Public":
+                    coordinate_points["Public"].append(coords)
+                    uni_names["Public"].append(m.instnm.title())
+                elif m.control == "Private, for-profit":
+                    coordinate_points["Private, for-profit"].append(coords)
+                    uni_names["Private, for-profit"].append(m.instnm.title())
         avg_salary = None
+
+        #test code
+        print(uni_names["Public"])
+        print(uni_names["Private, nonprofit"])
+        print(uni_names["Private, for-profit"])
 
         # make sure results were returned for this major
         if len(highest_universities) != 0:
@@ -137,7 +161,9 @@ def highest_major(major):
                 cursor.execute(query2)
                 avg_salary = round(cursor.fetchone()[0], -2)
     # returns dictionary
-    return dict(highest_universities), avg_salary
+    return dict(highest_universities), avg_salary, \
+           uni_names["Public"], uni_names["Private, nonprofit"], uni_names["Private, for-profit"],\
+           coordinate_points["Public"], coordinate_points["Private, nonprofit"], coordinate_points["Private, for-profit"]
 
 
 # returns dictionary of majors that pay the highest for a given school

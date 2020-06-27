@@ -6,6 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CollegeMajor: Main Page</title>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 </head>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <link src="/static/collected/autocomplete_light/vendor/select2/dist/css/select2.css" type="text/css" media="all" rel="stylesheet" />
@@ -35,6 +36,12 @@
 
     <hr>
     {% block content %}
+                <!-- Major Graph-->
+        <div class= ="container">
+            <canvas id ="MajorChart">
+
+            </canvas>
+        </div>
     <table>
         <tr>
             {% if majors|length > 0 %}
@@ -71,6 +78,70 @@
             {% endfor %}
             {% endif %}
     </table>
+
+        <script>
+    let myChart = document.getElementById('MajorChart').getContext('2d');
+
+    // Global Options
+    Chart.defaults.global.defaultFontFamily = 'Lato';
+    Chart.defaults.global.defaultFontSize = 18;
+    Chart.defaults.global.defaultFontColor = '#777';
+    let massPopChart = new Chart(myChart, {
+    type: 'scatter',
+    data: {
+        datasets: [{
+            label: 'Public',
+            backgroundColor:"blue",
+            data: {{ coordinate_points_pub|safe}},
+            labels: {{ uni_names_pub|safe }}
+        },
+        {
+            label: 'Private Non-Profit',
+            backgroundColor:"green",
+            data: {{ coordinate_points_priv_np|safe}},
+                labels: {{ uni_names_priv_np|safe}}
+        },
+        {
+            label: 'Private For Profit',
+            backgroundColor:"red",
+            data: {{ coordinate_points_priv_fp|safe}},
+            labels: {{ uni_names_priv_fp|safe}}
+        }]
+    },
+    options: {
+        tooltips: {
+            callbacks: {
+                label: function(tooltipItem, data) {
+                    var dataset = data.datasets[tooltipItem.datasetIndex];
+                    var index = tooltipItem.index;
+                    var label =  dataset.labels[index];
+                    return label + ': (' + tooltipItem.xLabel + ', ' + tooltipItem.yLabel + ')';
+                }
+            }
+         },
+        scales: {
+            xAxes: [{
+                type: 'linear',
+                position: 'bottom',
+                scaleLabel: {
+                    display: true,
+                    labelString: "Median Salary",
+                    fontColor: "red"
+                }
+            }],
+            yAxes: [{
+                type: 'linear',
+                position: 'bottom',
+                scaleLabel: {
+                    display: true,
+                    labelString: "Median Debt",
+                    fontColor: "red"
+                }
+            }]
+        }
+    }
+});
+        </script>
  {% endblock %}
 
     <!-- End Test-->
