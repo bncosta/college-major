@@ -73,7 +73,17 @@
                         <div>Major: {{ major }}</div>
                     {% endif %}
                 </h2>
-                <th>First Year Salary</th>
+
+
+            <th>First Year Salary</th>
+            {% if majors|length > 0%}
+
+                <th>First Year Debt</th>
+            {% endif %}
+
+
+
+
             {% endif %}
             {% if schools|length > 0 %}
                 <h3>Average salary for major: ${{ average_salary }}.</h3>
@@ -99,7 +109,7 @@
                 <tr>
                     <td>{{ major_name|title }}</td>
 
-                    {% for _, median_earning in median_earnings_kv.items %}
+                    {% for d, median_earning in median_earnings_kv.items %}
                         <td>${{ median_earning }}</td>
                     {% endfor %}
                 </tr>
