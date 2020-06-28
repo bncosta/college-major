@@ -3,7 +3,7 @@
 By Aaron Shah and Brian Costa
 
 Web application allowing easy search and analysis of expected majors earnings for American universities. Searches can be done
-by university or major name, with detailed graphs, tables, and university insights.  
+by university or major name, with detailed graphs, tables, and university insights. Salary data for over 300 unique majors across 5,500 public, private non-profit, and private for-profit univerisities. Over 40,000 total earnings records.
 
 Data provided by the Department of Education's [College Scorecard](https://collegescorecard.ed.gov/). Explore their data [here](https://collegescorecard.ed.gov/data/). 
 
