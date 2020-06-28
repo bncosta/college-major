@@ -182,7 +182,6 @@ def highest_school(school):
 
         # data points that will be passed to front-end
         coordinate_points = []
-
         for m in Collegemajor.objects.raw(query1):
             highest_majors[m.cipdesc]["median_earnings"] = m.md_earn_wne
             highest_majors[m.cipdesc]["median_debt"] = m.debtmedian
