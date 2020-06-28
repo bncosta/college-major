@@ -94,4 +94,4 @@ College Scorecard occasionally updates their data. To update the database with n
  
  ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the GNU General Public License.
