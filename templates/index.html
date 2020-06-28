@@ -132,18 +132,38 @@
                 datasets: [{
                     label: 'Public',
                     backgroundColor: "blue",
+
+                    borderColor: "black",
+                    pointRadius: 10,
+                    pointHoverRadius: 20,
+                    pointStyle: "rectRot",
+                    pointHoverBackgroundColor: 'rgba(255, 143, 0, 0.5)',
+
                     data: {{ coordinate_points_pub|safe}},
                     labels: {{ uni_names_pub|safe }}
                 },
                     {
                         label: 'Private Non-Profit',
                         backgroundColor: "green",
+                        borderColor: "black",
+                        pointRadius: 10,
+                        pointHoverRadius: 20,
+                        pointStyle: "triangle",
+                        pointHoverBackgroundColor: 'rgba(255, 143, 0, 0.5)',
+
                         data: {{ coordinate_points_priv_np|safe}},
                         labels: {{ uni_names_priv_np|safe}}
                     },
                     {
                         label: 'Private For Profit',
                         backgroundColor: "red",
+
+                        borderColor: "black",
+                        pointRadius: 10,
+                        pointHoverRadius: 20,
+                        pointStyle: "rectangle",
+                        pointHoverBackgroundColor: 'rgba(255, 143, 0, 0.5)',
+
                         data: {{ coordinate_points_priv_fp|safe}},
                         labels: {{ uni_names_priv_fp|safe}}
                     }]
@@ -196,6 +216,11 @@
                 datasets: [{
                     label: 'School',
                     backgroundColor: "blue",
+                    borderColor: "blue",
+                    pointRadius: 10,
+                    pointHoverRadius: 20,
+                    pointStyle: "triangle",
+                    pointHoverBackgroundColor: 'rgba(255, 143, 0, 0.5)',
                     data: {{ coordinate_points|safe}},
                     labels: {{ major_names|safe }}
                 }]
@@ -263,5 +288,8 @@
         })($)
     </script>
 {% endblock %}
+
+
+
 </body>
 </html>
