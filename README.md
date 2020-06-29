@@ -31,7 +31,7 @@ and configuring the database.
 
 1. Clone the project. Ensure you have the software required in the prerequisites. Run the project as a Django server.
 2. Create a database in PostgreSQL called *collegemajor*. Running the PostgreSql application, psql, in the command line,
-run the dump file *data.sql* (to be uploaded in a later iteration). After the successful creation of the database, 
+run the dump file *data.sql*, [available here](https://drive.google.com/drive/folders/13W0sOaTGrPlGcmdazTM-sKqxiuDbtxAA?usp=sharing). After the successful creation of the database, 
 create a file at the root of the project called *passwords.py*. Add the following variables:
 
 - DATABASE_USERNAME = {name of username configured for database CollegeMajor}
