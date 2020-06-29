@@ -33,7 +33,8 @@ class CollegeMajor(TemplateView):
             major = request.GET['major'].lower()
             context['schools'], context['average_salary'], context['uni_names_pub'], context['uni_names_priv_np'], \
             context['uni_names_priv_fp'], context['coordinate_points_pub'], context['coordinate_points_priv_np'], \
-            context['coordinate_points_priv_fp'] = highest_major(major)
+            context['coordinate_points_priv_fp'], \
+            context['boxplot'] = highest_major(major)
 
             context['major'] = major.title()
 
@@ -66,7 +67,6 @@ class MajorAutoComplete(autocomplete.Select2QuerySetView):
         if self.q:
             majors = majors.filter(cipdesc__icontains=self.q)
 
-        print(type(majors))
         return majors
 
     # Because we are only unpacking a list of majors, we simply return the string of the tuple instead of pk obj
@@ -111,7 +111,6 @@ Helper Methods - (Could possibly be reimplemented in class?)
 
 # returns dictionary of universities that pay the highest for a given major
 def highest_major(major):
-    print(major)
     if major is None or "":
         return None
 
@@ -123,13 +122,16 @@ def highest_major(major):
     query1 = f"SELECT * FROM collegemajor WHERE cipdesc = '{major}' " \
              f"and credlev = '3' order by md_earn_wne::int desc;"
 
+    university_list = Collegemajor.objects.raw(query1)
     # names of universities, categorized by private / public
     uni_names = {"Private, nonprofit": [], "Public": [], "Private, for-profit": []}
 
     # list of data points that will be passed to front end
     coordinate_points = {"Private, nonprofit": [], "Public": [], "Private, for-profit": []}
 
-    for m in Collegemajor.objects.raw(query1):
+    # retrieves 5 number summary of data
+    box_plot = {"big_5": get_five_number_summary(university_list)}
+    for m in university_list:
         highest_universities[m.instnm]["median_earnings"] = m.md_earn_wne
         coords = {'x': m.md_earn_wne, 'y': m.debtmedian}
 
@@ -160,7 +162,8 @@ def highest_major(major):
     # returns dictionary
     return dict(highest_universities), avg_salary, uni_names["Public"], uni_names["Private, nonprofit"], \
            uni_names["Private, for-profit"], coordinate_points["Public"], coordinate_points["Private, nonprofit"], \
-           coordinate_points["Private, for-profit"]
+           coordinate_points["Private, for-profit"],\
+           box_plot
 
 
 # returns dictionary of majors that pay the highest for a given school
@@ -222,3 +225,14 @@ def highest_avg_major():
 
         # returns dictionary
         return dict(highest_majors), major_names, coordinate_points
+
+# returns min, Q1, median, Q3, and maximum pay of universities for a given majors
+def get_five_number_summary(universities):
+    return {
+        'max': universities[0].md_earn_wne,
+        'q3': universities[int(len(universities)/4)].md_earn_wne,
+        'med': universities[int(len(universities)/2)].md_earn_wne,
+        'q1': universities[int(len(universities)/4 + len(universities)/2)].md_earn_wne,
+        'min': universities[int(len(universities)-1)].md_earn_wne
+    }
+

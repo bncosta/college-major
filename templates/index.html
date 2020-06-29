@@ -7,9 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CollegeMajor: Main Page</title>
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju-1.12.1/jq-3.3.1/dt-1.10.21/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/v/ju-1.12.1/jq-3.3.1/dt-1.10.21/datatables.min.css"/>
 
-<script type="text/javascript" src="https://cdn.datatables.net/v/ju-1.12.1/jq-3.3.1/dt-1.10.21/datatables.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.datatables.net/v/ju-1.12.1/jq-3.3.1/dt-1.10.21/datatables.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#data').DataTable();
@@ -75,11 +77,11 @@
                 </h2>
 
 
-            <th>First Year Salary</th>
-            {% if majors|length > 0%}
+                <th>First Year Salary</th>
+                {% if majors|length > 0 %}
 
-                <th>First Year Debt</th>
-            {% endif %}
+                    <th>First Year Debt</th>
+                {% endif %}
 
 
 
@@ -87,6 +89,13 @@
             {% endif %}
             {% if schools|length > 0 %}
                 <h3>Average salary for major: ${{ average_salary }}.</h3>
+                <p>
+                    Min: ${{ boxplot.big_5.min }} |
+                    Q1: ${{ boxplot.big_5.q1 }} |
+                    Med: ${{ boxplot.big_5.med }} |
+                    Q3: ${{ boxplot.big_5.q3 }} |
+                    Max: ${{ boxplot.big_5.max }}
+                </p>
             {% endif %}
         </tr>
         </thead>
@@ -121,7 +130,6 @@
     <!-- Js that renders graph for Majors-->
     <script>
         let myChart = document.getElementById('MajorChart').getContext('2d');
-
         // Global Options
         Chart.defaults.global.defaultFontFamily = 'Lato';
         Chart.defaults.global.defaultFontSize = 18;
