@@ -30,7 +30,7 @@ Installation consists of two major parts. Configuring Python and Django to run t
 and configuring the database. 
 
 1. Clone the project. Ensure you have the software required in the prerequisites. Run the project as a Django server.
-2. Create a database in PostgreSQL called *CollegeMajor*. Running the PostgreSql application, psql, in the command line,
+2. Create a database in PostgreSQL called *collegemajor*. Running the PostgreSql application, psql, in the command line,
 run the dump file *data.sql* (to be uploaded in a later iteration). After the successful creation of the database, 
 create a file at the root of the project called *passwords.py*. Add the following variables:
 
