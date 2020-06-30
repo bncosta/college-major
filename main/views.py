@@ -65,6 +65,9 @@ class CollegeMajor(TemplateView):
         if "highest_avg" in request.GET.keys():
             context['majors'], context["major_names"], context["coordinate_points"] = highest_avg_major()
 
+        # gets all_major_stats: hardcoded values for 1st quartile, median, and 3rd quartile for all majors
+        context['all_major_stats'] = all_major_stats()
+
         # returns output
         return render(request, "index.html", context)
 
@@ -225,6 +228,20 @@ def highest_avg_major():
                  f"WHERE credlev = '3' group by cipdesc order by average_earnings desc;"
 
         cursor.execute(query1)
+
+        # # Useful to find median, and quartiles wages for entire dataset.
+        # query2 = f"SELECT md_earn_wne, id FROM collegemajor " \
+        #          f"WHERE credlev = '3' order by md_earn_wne desc;"
+        # cursor.execute(query2)
+        # import statistics
+        # values = []
+        #
+        # for md_earn_wne in cursor.fetchall():
+        #     values.append(int(md_earn_wne[0]))
+        # values.sort()
+        #
+        # print(statistics.median(values[10695:-1]))
+
         major_names = list()
         coordinate_points = list()
         for avg_salary, median_debt, major_name in cursor.fetchall():
@@ -243,6 +260,7 @@ def highest_avg_major():
         # returns dictionary
         return dict(highest_majors), major_names, coordinate_points
 
+
 # returns min, Q1, median, Q3, and maximum pay of universities for a given majors
 def get_five_number_summary(universities):
     return {
@@ -253,3 +271,10 @@ def get_five_number_summary(universities):
         'min': universities[int(len(universities)-1)].md_earn_wne
     }
 
+# hardcoded values for 1st quartile, median, and 3rd quartile for all majors
+def all_major_stats():
+    FIRST_QUARTILE = 28400
+    MEDIAN = 34500
+    SECOND_QUARTILE = 45300
+
+    return {'q1': FIRST_QUARTILE, 'median': MEDIAN, 'q3': SECOND_QUARTILE}

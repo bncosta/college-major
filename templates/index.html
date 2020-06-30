@@ -104,7 +104,10 @@
 
 
                 <script>
-                    let major = "{{ major }}"
+                    let major = "{{ major }}";
+                    let q1 = "{{ all_major_stats.q1 }}";
+                    let median = "{{ all_major_stats.median }}";
+                    let q3 = "{{ all_major_stats.q3}}";
                     Chart.defaults.global.defaultFontFamily = 'Lato';
                     Chart.defaults.global.defaultFontSize = 18;
                     Chart.defaults.global.defaultFontColor = '#777';
@@ -126,8 +129,8 @@
                             },
                             {
                                 label: "All Majors",
-                                data: [25000, 47000,
-                                    57000],
+                                data: [q1, median,
+                                    q3],
                                 backgroundColor: ["#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56"],
                                 hoverBackgroundColor: ["#fceb56", "#fceb56", "#fceb56"]
                             }
@@ -146,7 +149,7 @@
                                     stacked: false,
                                     scaleLabel: {
                                         display: true,
-                                        labelString: "Salary ($)",
+                                        labelString: "First Year Salary",
                                         fontColor: "red"
                                     }
 
@@ -193,6 +196,7 @@
     <!-- Js that renders graph for Majors-->
     <script>
         let myChart = document.getElementById('MajorChart').getContext('2d');
+        major = "{{ major }}";
         // Global Options
         let massPopChart = new Chart(myChart, {
             type: 'scatter',
@@ -237,6 +241,11 @@
                     }]
             },
             options: {
+                title: {
+                    display: true,
+                    text: "Salary and Debt at Universities for " + major + ".",
+                    backgroundColor: "red"
+                },
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {
@@ -253,7 +262,7 @@
                         position: 'bottom',
                         scaleLabel: {
                             display: true,
-                            labelString: "Median Salary",
+                            labelString: "Median First Year Salary",
                             fontColor: "red"
                         }
                     }],
