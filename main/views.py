@@ -31,12 +31,31 @@ class CollegeMajor(TemplateView):
         # display schools that pay the highest for a given major to front-end
         if "major" in request.GET.keys():
             major = request.GET['major'].lower()
-            context['schools'], context['average_salary'], context['uni_names_pub'], context['uni_names_priv_np'], \
-            context['uni_names_priv_fp'], context['coordinate_points_pub'], context['coordinate_points_priv_np'], \
-            context['coordinate_points_priv_fp'], \
-            context['boxplot'] = highest_major(major)
+            schools_with_major = schools_query(major)
+            # context['schools'], context['uni_names_pub'], context['uni_names_priv_np'], \
+            # context['uni_names_priv_fp'], context['coordinate_points_pub'], context['coordinate_points_priv_np'], \
+            # context['coordinate_points_priv_fp'] = highest_major(major, schools_with_major)
+            highest_universities, uni_names, coordinate_points = highest_major(major, schools_with_major)
 
+            # retrieves highest universities
+            context['schools'] = highest_universities
+
+            # Retrieves university names & catagorizes them based on their school type
+            context['uni_names_pub'] = uni_names["Public"]
+            context['uni_names_priv_np'] = uni_names["Private, nonprofit"]
+            context['uni_names_priv_fp'] = uni_names["Private, for-profit"]
+
+            # Retrieves coordinate points & catagorizes them based on their school type
+            context['coordinate_points_pub'] = coordinate_points["Public"]
+            context['coordinate_points_priv_np'] = coordinate_points["Private, nonprofit"]
+            context['coordinate_points_priv_fp'] = coordinate_points["Private, for-profit"]
+
+            # retrieves 5 number summary of data
+            context['boxplot'] = {"big_5": get_five_number_summary(schools_with_major)}
             context['major'] = major.title()
+
+            # gets average first year salary of major across all schools
+            context['average_salary'] = average_salary(highest_universities)
 
         # display top paying majors for a given university to front-end
         if "school" in request.GET.keys():
@@ -109,20 +128,14 @@ Helper Methods - (Could possibly be reimplemented in class?)
 """
 
 
-# returns dictionary of universities that pay the highest for a given major
-def highest_major(major):
+# returns dictionary of universities that pay the highest for
+def highest_major(major, university_list):
     if major is None or "":
         return None
 
     # universities that receive highest pay from major
     highest_universities = defaultdict(dict)
 
-    major = major.replace("'", "''")
-    major = major.replace('"', '""')
-    query1 = f"SELECT * FROM collegemajor WHERE cipdesc = '{major}' " \
-             f"and credlev = '3' order by md_earn_wne::int desc;"
-
-    university_list = Collegemajor.objects.raw(query1)
     # names of universities, categorized by private / public
     uni_names = {"Private, nonprofit": [], "Public": [], "Private, for-profit": []}
 
@@ -148,23 +161,27 @@ def highest_major(major):
                 coordinate_points["Private, for-profit"].append(coords)
                 uni_names["Private, for-profit"].append(m.instnm.title())
 
-    avg_salary = None
 
-    # first makes sure there are results for this major (user didnt input non existent major)
-    # next, gets the average pay for this major across all universities
-    if len(highest_universities) != 0:
-        with connection.cursor() as cursor:
-            query2 = f"SELECT AVG(NULLIF(md_earn_wne, '')::int)  FROM collegemajor WHERE cipdesc = '{major}' " \
-                     f"and credlev = '3';"
-            cursor.execute(query2)
-            avg_salary = int(round(cursor.fetchone()[0], -2))
+    # returns dictionaries
+    return dict(highest_universities), uni_names, coordinate_points
 
-    # returns dictionary
-    return dict(highest_universities), avg_salary, uni_names["Public"], uni_names["Private, nonprofit"], \
-           uni_names["Private, for-profit"], coordinate_points["Public"], coordinate_points["Private, nonprofit"], \
-           coordinate_points["Private, for-profit"],\
-           box_plot
 
+# returns average salary of major across all schools
+def average_salary(highest_universities):
+    # gets the average pay for this major across all universities
+    salaries = [int(v["median_earnings"]) for v in list(highest_universities.values())]
+    return int(round(sum(salaries) / len(salaries), -2))
+
+
+# returns list of schools which have pay data for the given major
+def schools_query(major):
+    if major is None or "":
+        return None
+    major = major.replace("'", "''")
+    major = major.replace('"', '""')
+    query1 = f"SELECT * FROM collegemajor WHERE cipdesc = '{major}' " \
+             f"and credlev = '3' order by md_earn_wne::int desc;"
+    return Collegemajor.objects.raw(query1)
 
 # returns dictionary of majors that pay the highest for a given school
 def highest_school(school):

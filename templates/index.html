@@ -96,6 +96,69 @@
                     Q3: ${{ boxplot.big_5.q3 }} |
                     Max: ${{ boxplot.big_5.max }}
                 </p>
+                <div style="width:50%">
+                    <canvas id="MeSeStatusCanvas">
+
+                    </canvas>
+                </div>
+
+
+                <script>
+                    let major = "{{ major }}"
+                    Chart.defaults.global.defaultFontFamily = 'Lato';
+                    Chart.defaults.global.defaultFontSize = 18;
+                    Chart.defaults.global.defaultFontColor = '#777';
+
+                    let MeSeContext = document.getElementById("MeSeStatusCanvas").getContext("2d");
+                    var MeSeData = {
+                        labels: [
+                            "Q1",
+                            "Med",
+                            "Q3"
+                        ],
+                        datasets: [
+                            {
+                                label: major,
+                                data: [{{ boxplot.big_5.q1 }}, {{ boxplot.big_5.med }},
+                                    {{ boxplot.big_5.q3 }}],
+                                backgroundColor: ["#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6"],
+                                hoverBackgroundColor: ["#29d0f6", "#29d0f6", "#29d0f6"]
+                            },
+                            {
+                                label: "All Majors",
+                                data: [25000, 47000,
+                                    57000],
+                                backgroundColor: ["#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56"],
+                                hoverBackgroundColor: ["#fceb56", "#fceb56", "#fceb56"]
+                            }
+                        ]
+                    };
+
+                    var MeSeChart = new Chart(MeSeContext, {
+                        type: 'bar',
+                        data: MeSeData,
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    },
+                                    stacked: false,
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: "Salary ($)",
+                                        fontColor: "red"
+                                    }
+
+                                },
+                                ]
+                            }
+
+                        }
+                    });
+
+                </script>
+
             {% endif %}
         </tr>
         </thead>
@@ -131,9 +194,6 @@
     <script>
         let myChart = document.getElementById('MajorChart').getContext('2d');
         // Global Options
-        Chart.defaults.global.defaultFontFamily = 'Lato';
-        Chart.defaults.global.defaultFontSize = 18;
-        Chart.defaults.global.defaultFontColor = '#777';
         let massPopChart = new Chart(myChart, {
             type: 'scatter',
             data: {
