@@ -91,9 +91,9 @@
                 <h3>Average salary for major: ${{ average_salary }}.</h3>
                 <p>
                     Min: ${{ boxplot.big_5.min }} |
-                    Q1: ${{ boxplot.big_5.q1 }} |
-                    Med: ${{ boxplot.big_5.med }} |
-                    Q3: ${{ boxplot.big_5.q3 }} |
+                    Quartile 1: ${{ boxplot.big_5.q1 }} |
+                    Median: ${{ boxplot.big_5.med }} |
+                    Quartile 3: ${{ boxplot.big_5.q3 }} |
                     Max: ${{ boxplot.big_5.max }}
                 </p>
                 <div style="width:50%">
@@ -115,9 +115,9 @@
                     let MeSeContext = document.getElementById("MeSeStatusCanvas").getContext("2d");
                     var MeSeData = {
                         labels: [
-                            "Q1",
-                            "Med",
-                            "Q3"
+                            "Quartile 1",
+                            "Median",
+                            "Quartile 3"
                         ],
                         datasets: [
                             {
