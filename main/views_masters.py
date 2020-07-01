@@ -92,7 +92,7 @@ class MajorAutoComplete(autocomplete.Select2QuerySetView):
     # code that enables autocomplete search for majors
     def get_queryset(self):
         # gets dataset of majors
-        majors = Collegemajor.objects.filter(credlev='3').values_list('cipdesc').distinct()
+        majors = Collegemajor.objects.filter(credlev='5').values_list('cipdesc').distinct()
 
         # filters user search by major
         if self.q:
@@ -116,7 +116,7 @@ class SchoolAutoComplete(autocomplete.Select2QuerySetView):
     # code that enables autocomplete search for schools
     def get_queryset(self):
         # gets dataset of school
-        schools = Collegemajor.objects.filter(credlev='3').values_list('instnm').distinct()
+        schools = Collegemajor.objects.filter(credlev='5').values_list('instnm').distinct()
 
         # filters user search by school
         if self.q:
@@ -189,7 +189,7 @@ def schools_query(major):
     major = major.replace("'", "''")
     major = major.replace('"', '""')
     query1 = f"SELECT * FROM collegemajor WHERE cipdesc = '{major}' " \
-             f"and credlev = '3' order by md_earn_wne::int desc;"
+             f"and credlev = '5' order by md_earn_wne::int desc;"
     return Collegemajor.objects.raw(query1)
 
 
@@ -205,7 +205,7 @@ def highest_school(school):
         school = school.replace("'", "''")
         school = school.replace('"', '""')
         query1 = f"SELECT id, cipdesc, md_earn_wne, debtmedian FROM collegemajor WHERE instnm = '{school}' " \
-                 f"and credlev = '3' order by md_earn_wne::int desc;"
+                 f"and credlev = '5' order by md_earn_wne::int desc;"
 
         # names of majors that the university teaches
         major_names = []
@@ -232,7 +232,7 @@ def highest_avg_major():
         # if major is valid, then pulls top 10 highest paying schools
         query1 = f"SELECT AVG(NULLIF(md_earn_wne, '')::int) as average_earnings, " \
                  f"AVG(NULLIF(debtmedian, 'PrivacySuppressed')::int) as average_debt, cipdesc  FROM collegemajor " \
-                 f"WHERE credlev = '3' group by cipdesc order by average_earnings desc;"
+                 f"WHERE credlev = '5' group by cipdesc order by average_earnings desc;"
 
         cursor.execute(query1)
 

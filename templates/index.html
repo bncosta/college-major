@@ -70,9 +70,9 @@
                 <th>Universities</th>
             {% endif %}
             {% if majors|length > 0 or schools|length > 0 %}
-                <h2>Highest Bachelor's Degree Salaries
+                <h2>Bachelor's Degree Salaries
                     {% if schools|length > 0 %}
-                        <div>Major: {{ major }}</div>
+                        for {{ major }}
                     {% endif %}
                 </h2>
 
@@ -102,65 +102,133 @@
                     </canvas>
                 </div>
 
+                {% if median_masters.has_values %}
+                    <script>
+                        let major = "{{ major }}";
+                        let q1 = "{{ all_major_stats.q1 }}";
+                        let median = "{{ all_major_stats.median }}";
+                        let q3 = "{{ all_major_stats.q3}}";
+                        Chart.defaults.global.defaultFontFamily = 'Lato';
+                        Chart.defaults.global.defaultFontSize = 18;
+                        Chart.defaults.global.defaultFontColor = '#777';
 
-                <script>
-                    let major = "{{ major }}";
-                    let q1 = "{{ all_major_stats.q1 }}";
-                    let median = "{{ all_major_stats.median }}";
-                    let q3 = "{{ all_major_stats.q3}}";
-                    Chart.defaults.global.defaultFontFamily = 'Lato';
-                    Chart.defaults.global.defaultFontSize = 18;
-                    Chart.defaults.global.defaultFontColor = '#777';
-
-                    let MeSeContext = document.getElementById("MeSeStatusCanvas").getContext("2d");
-                    var MeSeData = {
-                        labels: [
-                            "Quartile 1",
-                            "Median",
-                            "Quartile 3"
-                        ],
-                        datasets: [
-                            {
-                                label: major,
-                                data: [{{ boxplot.big_5.q1 }}, {{ boxplot.big_5.med }},
-                                    {{ boxplot.big_5.q3 }}],
-                                backgroundColor: ["#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6"],
-                                hoverBackgroundColor: ["#29d0f6", "#29d0f6", "#29d0f6"]
-                            },
-                            {
-                                label: "All Majors",
-                                data: [q1, median,
-                                    q3],
-                                backgroundColor: ["#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56"],
-                                hoverBackgroundColor: ["#fceb56", "#fceb56", "#fceb56"]
-                            }
-                        ]
-                    };
-
-                    var MeSeChart = new Chart(MeSeContext, {
-                        type: 'bar',
-                        data: MeSeData,
-                        options: {
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    },
-                                    stacked: false,
-                                    scaleLabel: {
-                                        display: true,
-                                        labelString: "First Year Salary",
-                                        fontColor: "red"
-                                    }
-
+                        let MeSeContext = document.getElementById("MeSeStatusCanvas").getContext("2d");
+                        var MeSeData = {
+                            labels: [
+                                "Quartile 1",
+                                "Median",
+                                "Quartile 3"
+                            ],
+                            datasets: [
+                                {
+                                    label: "All Majors",
+                                    data: [q1, median,
+                                        q3],
+                                    backgroundColor: ["#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56"],
+                                    hoverBackgroundColor: ["#fceb56", "#fceb56", "#fceb56"]
                                 },
-                                ]
+                                {
+                                    label: "Bachelor's Degree: " + major,
+                                    data: [{{ boxplot.big_5.q1 }}, {{ boxplot.big_5.med }},
+                                        {{ boxplot.big_5.q3 }}],
+                                    backgroundColor: ["#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6"],
+                                    hoverBackgroundColor: ["#29d0f6", "#29d0f6", "#29d0f6"]
+                                },
+                                {
+                                    label: "Master's Degree: " + major,
+                                    data: [{{ median_masters.q1 }}, {{ median_masters.med }},
+                                        {{ median_masters.q3 }}],
+                                    backgroundColor: ["#F08080", "#F08080", "#F08080", "#F08080", "#29B6F6", "#29B6F6"],
+                                    hoverBackgroundColor: ["#F08080", "#F08080", "#F08080"]
+                                }
+
+                            ]
+                        };
+
+                        var MeSeChart = new Chart(MeSeContext, {
+                            type: 'bar',
+                            data: MeSeData,
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        },
+                                        stacked: false,
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: "First Year Salary",
+                                            fontColor: "red"
+                                        }
+
+                                    },
+                                    ]
+                                }
+
                             }
+                        });
 
-                        }
-                    });
+                    </script>
+                {% else %}
+                    <script>
+                        let major = "{{ major }}";
+                        let q1 = "{{ all_major_stats.q1 }}";
+                        let median = "{{ all_major_stats.median }}";
+                        let q3 = "{{ all_major_stats.q3}}";
+                        Chart.defaults.global.defaultFontFamily = 'Lato';
+                        Chart.defaults.global.defaultFontSize = 18;
+                        Chart.defaults.global.defaultFontColor = '#777';
 
-                </script>
+                        let MeSeContext = document.getElementById("MeSeStatusCanvas").getContext("2d");
+                        var MeSeData = {
+                            labels: [
+                                "Quartile 1",
+                                "Median",
+                                "Quartile 3"
+                            ],
+                            datasets: [
+                                {
+                                    label: "All Majors",
+                                    data: [q1, median,
+                                        q3],
+                                    backgroundColor: ["#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56", "#FCCE56"],
+                                    hoverBackgroundColor: ["#fceb56", "#fceb56", "#fceb56"]
+                                },
+                                {
+                                    label: "Bachelor's Degree: " + major,
+                                    data: [{{ boxplot.big_5.q1 }}, {{ boxplot.big_5.med }},
+                                        {{ boxplot.big_5.q3 }}],
+                                    backgroundColor: ["#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6", "#29B6F6"],
+                                    hoverBackgroundColor: ["#29d0f6", "#29d0f6", "#29d0f6"]
+                                }
+                            ]
+                        };
+
+                        var MeSeChart = new Chart(MeSeContext, {
+                            type: 'bar',
+                            data: MeSeData,
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        },
+                                        stacked: false,
+                                        scaleLabel: {
+                                            display: true,
+                                            labelString: "First Year Salary",
+                                            fontColor: "red"
+                                        }
+
+                                    },
+                                    ]
+                                }
+
+                            }
+                        });
+
+                    </script>
+                {% endif %}
 
             {% endif %}
         </tr>
