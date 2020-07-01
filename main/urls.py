@@ -25,13 +25,13 @@ urlpatterns = [
     ),
     path('masters', CollegeMajorMasters.as_view(), name='masters'),
     url(
-        r'^major-autocomplete/$',
+        r'^major-autocomplete-masters/$',
         MajorAutoCompleteMasters.as_view(),
-        name='major-autocomplete',
+        name='major-autocomplete-masters',
     ),
     url(
         r'^school-autocomplete/$',
         SchoolAutoCompleteMasters.as_view(),
-        name='school-autocomplete',
+        name='school-autocomplete-masters',
     ),
 ]

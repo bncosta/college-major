@@ -3,7 +3,7 @@ from main.models import Collegemajor
 from collections import defaultdict
 from django.db import connection
 from django.views.generic import TemplateView
-from main.forms import MajorForm, SchoolForm
+from main.forms import MajorFormMasters, SchoolFormMasters
 from dal import autocomplete
 
 """
@@ -13,8 +13,8 @@ from dal import autocomplete
 
 
 class CollegeMajor(TemplateView):
-    mForm = MajorForm
-    sForm = SchoolForm
+    mForm = MajorFormMasters
+    sForm = SchoolFormMasters
 
     # gets context data that will always be rendered
     def get_context_data(self, request, **context):
@@ -291,11 +291,11 @@ def get_five_number_summary_sorted_list(universities: [int]) -> dict:
     }
 
 
-# hardcoded values for 1st quartile, median, and 3rd quartile for all majors (bachelor's)
+# hardcoded values for 1st quartile, median, and 3rd quartile for all majors (master's)
 def all_major_stats():
-    FIRST_QUARTILE = 28400
-    MEDIAN = 34500
-    SECOND_QUARTILE = 45300
+    FIRST_QUARTILE = 45000
+    MEDIAN = 75000
+    SECOND_QUARTILE = 90000
 
     return {'q1': FIRST_QUARTILE, 'median': MEDIAN, 'q3': SECOND_QUARTILE}
 
@@ -303,7 +303,7 @@ def all_major_stats():
 def get_median_masters(major: str):
     with connection.cursor() as cursor:
         print(major)
-        query1 = f"SELECT md_earn_wne FROM collegemajor WHERE cipdesc = '{major}' and credlev = '5';"
+        query1 = f"SELECT md_earn_wne FROM collegemajor WHERE cipdesc = '{major}' and credlev = '3';"
         cursor.execute(query1)
 
         graduate_values = []
