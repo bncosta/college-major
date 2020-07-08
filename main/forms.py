@@ -1,7 +1,8 @@
 from dal import autocomplete
 from django import forms
 from main.models import Collegemajor
-
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 """
 Form that assist in autocomplete for major selection
 """
@@ -17,6 +18,22 @@ class MajorForm(forms.ModelForm):
     class Meta:
         model = Collegemajor
         fields = ()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Fieldset(
+                'first arg is the legend of the fieldset',
+                'like_website',
+                'favorite_number',
+                'favorite_color',
+                'favorite_food',
+                'notes'
+            ),
+            ButtonHolder(
+                Submit('submit', 'Submit', css_class='button white')
+            )
+        )
 
 
 class MajorFormMasters(forms.ModelForm):

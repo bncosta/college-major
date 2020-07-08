@@ -53,6 +53,8 @@ The Django web application will run on on the localhost on port 8000, and Postgr
 
 To deploy, follow standard operating procedures for deploying a Django application and database.
 
+Use WhiteNoise Django extension to render static files
+
 Remember to update the database connection host in settings.py.
 
 ## Updating the Data
