@@ -1,7 +1,7 @@
 from django.urls import path
 from django.views.generic import TemplateView
 from django.conf.urls import url
-from main.views import CollegeMajor, MajorAutoComplete, SchoolAutoComplete
+from main.views import CollegeMajor, MajorAutoComplete, SchoolAutoComplete, TitleView
 from main.views_masters import CollegeMajor as CollegeMajorMasters,\
     MajorAutoComplete as MajorAutoCompleteMasters, SchoolAutoComplete as SchoolAutoCompleteMasters
 
@@ -9,7 +9,7 @@ from main.views_masters import CollegeMajor as CollegeMajorMasters,\
 from . import views
 
 """
-'major-autocomplete' and 'university-autocomplete' needs to be implemented more securely
+'main' is going to be the title page
 """
 urlpatterns = [
     path('', CollegeMajor.as_view(), name='index'),
@@ -30,8 +30,9 @@ urlpatterns = [
         name='major-autocomplete-masters',
     ),
     url(
-        r'^school-autocomplete/$',
+        r'^school-autocomplete-masters/$',
         SchoolAutoCompleteMasters.as_view(),
         name='school-autocomplete-masters',
     ),
+    path('title-page', TitleView.as_view(), name = 'title-page')
 ]

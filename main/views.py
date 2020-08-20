@@ -134,7 +134,11 @@ class SchoolAutoComplete(autocomplete.Select2QuerySetView):
         result = result[0].title()
         return result
 
-
+#placeholder class for titlepage
+class TitleView(TemplateView):
+    def get(self, request):
+        context = {}
+        return render(request, "title-page.html", context)
 """
 Helper Methods - (Could possibly be reimplemented in class?)
 """
@@ -159,6 +163,8 @@ def highest_major(major, university_list):
         coords = {'x': m.md_earn_wne, 'y': m.debtmedian}
 
         if coords['y'] != 'PrivacySuppressed':
+            # test code for salary debt density
+            #coords = {'x': m.md_earn_wne, 'y': str(int(m.md_earn_wne) / int(m.debtmedian))}
             if m.control == "Private, nonprofit":
                 coordinate_points["Private, nonprofit"].append(coords)
                 uni_names["Private, nonprofit"].append(m.instnm.title())
