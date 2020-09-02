@@ -1,0 +1,106 @@
+
+/*.navbar*/
+/*{*/
+/*    box-shadow: 0.5px 0.5px 0.5px 0.5px #ccc;*/
+/*    overflow: auto;*/
+/*}*/
+
+/*.navbar-brand img*/
+/*{*/
+/*    max-height: 50px;*/
+/*}*/
+/*#selection*/
+/*{*/
+
+/*    min-height: 900px;*/
+/*    padding-top: 100px;    */
+/*}*/
+/*.jumbotron */
+/*{*/
+/*    display: inline-block;*/
+/*    background: white;*/
+/*    margin-bottom: 0px;*/
+/*}*/
+
+/*.jumbotron img*/
+/*{*/
+/*    max-width: 2%; */
+/*    !* height: auto; *!*/
+/*}*/
+
+/*.wrapper img*/
+/*{*/
+/*    padding-left: 0px;*/
+/*     padding-top: 0px;*/
+/*    max-width: 80%;*/
+/*     !*padding-bottom: 100px;*!*/
+/*}*/
+
+/*.wrapper-2 img*/
+/*{*/
+/*    padding-top: 30px;*/
+/*    max-width: 80%;*/
+/*    padding-bottom: 80px;*/
+/*}*/
+
+/*@media screen and (max-width: 350px)*/
+/*{*/
+/*    .wrapper-2 img*/
+/*    {*/
+/*        display: none;*/
+/*    }*/
+/*}*/
+
+/*.btn*/
+/*{*/
+/*    font-size: 2vh;*/
+/*    background-color: #DCDCDC;*/
+/*    color: black;*/
+/*    width: 100%;*/
+/*    margin-right: 10px;*/
+/*    margin-bottom: 10px;*/
+/*    white-space: normal !important;*/
+/*    word-wrap: break-word;*/
+/*    border-color: gray*/
+/*}*/
+
+/*.card */
+/*{*/
+/*    margin-top: 50px;*/
+/*    margin-bottom: 50px;*/
+/*}*/
+
+/*.card-text*/
+/*{*/
+/*    height: 150px;*/
+/*}*/
+
+/*#FAQ*/
+/*{*/
+/*    background-color: #F5F5F5;*/
+/*}*/
+
+/*#FAQ .jumbotron*/
+/*{*/
+/*    background: none;*/
+/*}*/
+
+/*@media screen and (max-width: 767px)*/
+/*{*/
+/*    .bigger*/
+/*    {*/
+/*        display: none !important;*/
+/*    }*/
+/*}*/
+
+/*@media screen and (min-width: 768px)*/
+/*{*/
+/*    .smaller*/
+/*    {*/
+/*        display: none !important;*/
+/*    }*/
+/*}*/
+
+/*tr:hover a {*/
+/*    text-decoration: underline;*/
+/*}*/

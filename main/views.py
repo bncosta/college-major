@@ -1,3 +1,4 @@
+import requests
 from django.shortcuts import render
 from main.models import Collegemajor
 from collections import defaultdict
@@ -5,6 +6,7 @@ from django.db import connection
 from django.views.generic import TemplateView
 from main.forms import MajorForm, SchoolForm
 from dal import autocomplete
+import passwords
 
 """
 - Used for Index.html page
@@ -39,6 +41,16 @@ class CollegeMajor(TemplateView):
 
             # gets the median salary for masters degree, given the bachelor degree inputted
             context['median_masters'] = get_median_masters(major)
+
+            payload = {'info_ids': ['acceptance_rate', 'act_cumulative_midpoint', 'sat_composite_midpoint', 'avg_cost_of_attendance']}
+
+            unit_id = None
+            for school in schools_with_major:
+                print(school.unitid)
+                unit_id = school.unitid
+            api_url = f"https://api.collegeai.com/v1/api/college/info?api_key={passwords.API_KEY}&college_unit_ids={unit_id}"
+            college_data = requests.get(api_url, params=payload)
+            print(college_data.text)
 
             # front end will use this value to check if graduate data available
             if context['median_masters'] != dict():
