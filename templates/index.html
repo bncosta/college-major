@@ -63,9 +63,28 @@
           display: flex; align-items: center; padding-top: 20px; padding-bottom: 20px">
         <div class="container">
             <h2>Search By Major</h2>
-            <form class="form-inline" action="" method="get">
-                {{ MajorForm.as_p }}
-                <button type="submit" class="btn btn-dark">Search</button>
+{#            <form class="form-inline" action="" method="get">#}
+{#                {{ MajorForm.as_p }}#}
+{#                 {% for field in MajorForm.visible_fields %}#}
+{#                    {{ field }}#}
+{#                    {% endfor %}#}
+{#                <button type="submit" class="btn btn-dark">Search</button>#}
+{#            </form>#}
+            <form>
+              <div class="form-group row">
+
+                <div class="col-sm-10">
+{#                  {% for field in MajorForm.visible_fields %}#}
+{#                    {{ field }}#}
+{#                    {% endfor %}#}
+                    {% crispy MajorForm %}
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </div>
             </form>
         </div>
     </div>
@@ -78,9 +97,27 @@
           display: flex; align-items: center; padding-top: 20px; padding-bottom: 20px">
         <div class="container">
             <h2>Search by University</h2>
-            <form class="form-inline" action="" method="get">
-                {{ SchoolForm.as_p }}
-                <button class="btn btn-primary" type="submit">Search</button>
+{#            <form class="form-inline" action="" method="get">#}
+{#                {{ SchoolForm.as_p }}#}
+{#                {% for field in SchoolForm.visible_fields %}#}
+{#                    {{ field }}#}
+{#                {% endfor %}#}
+{#                <button class="btn btn-primary" type="submit">Search</button>#}
+{#            </form>#}
+            <form>
+              <div class="form-group row">
+
+                <div class="col-sm-10">
+                  {% for field in SchoolForm.visible_fields %}
+                    {{ field }}
+                {% endfor %}
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </div>
             </form>
         </div>
     </div>
@@ -395,7 +432,7 @@
                         position: 'bottom',
                         scaleLabel: {
                             display: true,
-                            labelString: "Median Debt",
+                            labelString: "Months to Pay Off Debt",
                             fontColor: "red"
                         }
                     }]

@@ -42,16 +42,6 @@ class CollegeMajor(TemplateView):
             # gets the median salary for masters degree, given the bachelor degree inputted
             context['median_masters'] = get_median_masters(major)
 
-            payload = {'info_ids': ['acceptance_rate', 'act_cumulative_midpoint', 'sat_composite_midpoint', 'avg_cost_of_attendance']}
-
-            unit_id = None
-            for school in schools_with_major:
-                print(school.unitid)
-                unit_id = school.unitid
-            api_url = f"https://api.collegeai.com/v1/api/college/info?api_key={passwords.API_KEY}&college_unit_ids={unit_id}"
-            college_data = requests.get(api_url, params=payload)
-            print(college_data.text)
-
             # front end will use this value to check if graduate data available
             if context['median_masters'] != dict():
                 context['median_masters']['has_values'] = True
@@ -83,6 +73,18 @@ class CollegeMajor(TemplateView):
             school = request.GET['school'].lower()
             context['majors'], context["major_names"], context["coordinate_points"] = highest_school(school)
 
+            # code that gets other data about college (to  be reimplemented)
+            payload = {'info_ids': ['acceptance_rate', 'act_cumulative_midpoint', 'sat_composite_midpoint',
+                                    'avg_cost_of_attendance']}
+
+            unit_id = None
+            school_data = get_school(school)
+            for school in school_data:
+                print(school.unitid)
+                unit_id = school.unitid
+            api_url = f"https://api.collegeai.com/v1/api/college/info?api_key={passwords.API_KEY}&college_unit_ids={unit_id}"
+            college_data = requests.get(api_url, params=payload)
+            print(college_data.text)
         if "highest_avg" in request.GET.keys():
             context['majors'], context["major_names"], context["coordinate_points"] = highest_avg_major()
 
@@ -175,8 +177,8 @@ def highest_major(major, university_list):
         coords = {'x': m.md_earn_wne, 'y': m.debtmedian}
 
         if coords['y'] != 'PrivacySuppressed':
-            # test code for salary debt density
-            #coords = {'x': m.md_earn_wne, 'y': str(int(m.md_earn_wne) / int(m.debtmedian))}
+            # number of months to pay off debt
+            coords = {'x': m.md_earn_wne, 'y': str(12*int(m.debtmedian) / int(m.md_earn_wne))}
             if m.control == "Private, nonprofit":
                 coordinate_points["Private, nonprofit"].append(coords)
                 uni_names["Private, nonprofit"].append(m.instnm.title())
@@ -210,6 +212,15 @@ def schools_query(major):
              f"and credlev = '3' order by md_earn_wne::int desc;"
     return Collegemajor.objects.raw(query1)
 
+# gets data for instituation in question
+def get_school(name):
+    if name is None or "":
+        return None
+    name = name.replace("'", "''")
+    name = name.replace('"', '""')
+    query1 = f"SELECT * FROM collegemajor WHERE instnm = '{name}' " \
+             f"and credlev = '3' order by md_earn_wne::int desc;"
+    return Collegemajor.objects.raw(query1)
 
 # returns dictionary of majors that pay the highest for a given school
 def highest_school(school):

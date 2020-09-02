@@ -16,16 +16,20 @@ class MajorForm(forms.ModelForm):
     )
 
     #crispy forms
-    #helper = FormHelper()
-    #helper.add_input(Submit('Search','Search', css_class='btn-primary'))
-    #helper.layout = Layout(
-        # Div(
-        #     'major',
-        #     'major',
-        #     style= 'background: blue !important',
-        #     css_id = 'test'
-        # )
-    #)
+    helper = FormHelper()
+    helper.add_input(Submit('Search','Search', css_class='btn-primary'))
+    helper.layout = Layout(
+        Div(
+            'test',
+            style= 'background: red !important',
+            css_id = 'test'
+        ),
+    Div(
+        'major',
+        style='background: green !important',
+        css_id='test'
+    )
+    )
     class Meta:
         model = Collegemajor
         fields = ()
