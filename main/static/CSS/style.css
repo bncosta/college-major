@@ -66,6 +66,22 @@ body {
     color: #fff;
 }
 
+/* dal bootstrap css fix */
+.select2-container--default {
+    width: 5% !important;
+    min-width: 1em !important;
+}
+/* django-addanother bootstrap css fix */
+.related-widget-wrapper{
+    padding-right: 16px;
+    position: relative;
+}
+.related-widget-wrapper-link{
+    position: absolute;
+    top: 3px;
+    right: 0px;
+}
+
 
 @media (max-width: 768px) {
     #showcase {
