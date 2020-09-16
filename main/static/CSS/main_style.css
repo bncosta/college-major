@@ -11,7 +11,6 @@
 }
 #selection
 {
-
     min-height: 900px;
     padding-top: 100px;
 }
@@ -20,6 +19,22 @@
     display: inline-block;
     background: white;
     margin-bottom: 0px;
+}
+
+/* dal bootstrap css fix */
+.select2-container--default {
+    width: 5% !important;
+    min-width: 1em !important;
+}
+/* django-addanother bootstrap css fix */
+.related-widget-wrapper{
+    padding-right: 16px;
+    position: relative;
+}
+.related-widget-wrapper-link{
+    position: absolute;
+    top: 3px;
+    right: 0px;
 }
 
 .jumbotron img

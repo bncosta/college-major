@@ -131,18 +131,28 @@
 <hr>
 {% block content %}
     <!-- Major Graph-->
-    <div class="container">
-     <div class="table-responsive" style="min-height:10rem">
-            <canvas id="MajorChart" class="table"></canvas>
+     <div
+             class="table-responsive"
+             style = "position: relative; !important;
+                        margin: auto;
+                        height:80vh;
+                        width:80vw"
+             >
+            <canvas id="MajorChart"
+                    class="table">
+            </canvas>
         </div>
-{#    <canvas class = "table-responsive" id="MajorChart" style = "min-height: 30rem; min-width: 100%">#}
-{##}
-{#        </canvas>#}
-{#    </div>#}
 
     <!-- School Graph-->
-    <div class="container">
-        <canvas id="SchoolChart">
+    <div
+        class="table-responsive"
+         style = "position: relative; !important;
+                    margin: auto;
+                    height:80vh;
+                    width:80vw"
+    >
+        <canvas id="SchoolChart"
+                class="table">
 
         </canvas>
     </div>
@@ -181,8 +191,8 @@
                     Quartile 3: ${{ boxplot.big_5.q3 }} |
                     Max: ${{ boxplot.big_5.max }}
                 </p>
-                <div style="width:50%">
-                    <canvas id="MeSeStatusCanvas">
+                <div class="table-responsive" style="position: relative; height:50vh; width:70vw">
+                    <canvas id="MeSeStatusCanvas" class="table">
 
                     </canvas>
                 </div>
@@ -234,6 +244,8 @@
                             type: 'bar',
                             data: MeSeData,
                             options: {
+                                maintainAspectRatio: false,
+                                responsive: true,
                                 scales: {
                                     yAxes: [{
                                         ticks: {
@@ -255,7 +267,6 @@
                                     ]
 
                                 }
-
                             }
                         });
 
@@ -299,6 +310,8 @@
                             type: 'bar',
                             data: MeSeData,
                             options: {
+                                maintainAspectRatio: false,
+                                responsive: true,
                                 scales: {
                                     yAxes: [{
                                         ticks: {
@@ -407,6 +420,8 @@
                     }]
             },
             options: {
+                maintainAspectRatio: false,
+                responsive: true,
                 title: {
                     display: true,
                     text: "Salary and Debt at Universities for " + major + ".",
@@ -469,6 +484,8 @@
                 }]
             },
             options: {
+                maintainAspectRatio: false,
+                responsive: true,
                 tooltips: {
                     callbacks: {
                         label: function (tooltipItem, data) {

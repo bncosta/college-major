@@ -22,10 +22,10 @@ body {
 }
 
 
-#showcase {
-    /*position: relative;*/
-    /*min-height: 600px;*/
-}
+/*#showcase {*/
+/*    !*position: relative;*!*/
+/*    !*min-height: 600px;*!*/
+/*}*/
 
 #called_showcase section#search {
     /*margin-top: 100px;*/
@@ -36,9 +36,9 @@ body {
     margin-top: 1rem;
 }
 
-#showcase .col-lg-5 {
-    /*margin-top: 100px;*/
-}
+/*#showcase .col-lg-5 {*/
+/*    !*margin-top: 100px;*!*/
+/*}*/
 
 #showcase .primary-overlay {
     top: 0;
@@ -64,22 +64,6 @@ body {
 
 #authors .fab {
     color: #fff;
-}
-
-/* dal bootstrap css fix */
-.select2-container--default {
-    width: 5% !important;
-    min-width: 1em !important;
-}
-/* django-addanother bootstrap css fix */
-.related-widget-wrapper{
-    padding-right: 16px;
-    position: relative;
-}
-.related-widget-wrapper-link{
-    position: absolute;
-    top: 3px;
-    right: 0px;
 }
 
 
